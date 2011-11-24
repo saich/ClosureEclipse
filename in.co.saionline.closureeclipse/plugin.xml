@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+   <extension
+         id="ClosureBuilder"
+         name="Closure Javscript Builder"
+         point="org.eclipse.core.resources.builders">
+      <builder
+            hasNature="true">
+         <run
+               class="in.co.saionline.closureeclipse.builder.ClosureBuilder">
+         </run>
+      </builder>
+   </extension>
+   <extension
+         id="ClosureNature"
+         name="Closure Compiler Nature"
+         point="org.eclipse.core.resources.natures">
+      <runtime>
+         <run
+               class="in.co.saionline.closureeclipse.builder.ClosureNature">
+         </run>
+      </runtime>
+      <builder
+            id="in.co.saionline.ClosureEclipse.ClosureBuilder">
+      </builder>
+   </extension>
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            adaptable="true"
+            objectClass="org.eclipse.core.resources.IProject"
+            nameFilter="*"
+            id="in.co.saionline.ClosureEclipse.contribution1">
+         <action
+               label="Add/Remove Closure Compiler Nature"
+               class="in.co.saionline.closureeclipse.builder.ToggleNatureAction"
+               menubarPath="additions"
+               enablesFor="+"
+               visibleWhen=""
+               id="in.co.saionline.ClosureEclipse.addRemoveNatureAction">
+         </action>
+      </objectContribution>
+   </extension>
+   
+      <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            adaptable="true"
+            objectClass="org.eclipse.core.resources.IFile"
+            nameFilter="*.js"
+            id="in.co.saionline.ClosureEclipse.contribution2">
+       
+         <menu
+         	id="in.co.saionline.ClosureEclipse.navigator.subMenu"
+         	label="Closure Compiler"
+         	path="additions">
+         	<separator name="group1"/>
+         </menu>
+         
+         <action
+         	id="in.co.saionline.ClosureEclipse.excludeFile"
+         	label="Exclude from Compilation"
+         	menubarPath="in.co.saionline.ClosureEclipse.navigator.subMenu/group1"
+         	class="in.co.saionline.closureeclipse.ExcludeFileAction"
+         	enablesFor="1">
+         </action>
+      </objectContribution>
+   </extension>
+   <extension
+         id="closureProblem"
+         name="Closure Compiler Problem"
+         point="org.eclipse.core.resources.markers">
+      <super
+            type="org.eclipse.core.resources.problemmarker">
+      </super>
+      <persistent
+            value="true">
+      </persistent>
+   </extension>
+  <extension
+         point="org.eclipse.ui.propertyPages">
+      <page
+            name="Closure Compiler"
+            category="org.eclipse.wst.jsdt.internal.ui.preferences.JavaScriptMainPage"
+            class="in.co.saionline.closureeclipse.ui.ClosurePropertyPage"
+            id="in.co.saionline.ClosureEclipse.ui.ClosurePropertyPage">
+         <enabledWhen>
+             <adapt type="org.eclipse.core.resources.IProject">
+		          <test property="org.eclipse.core.resources.projectNature" value="org.eclipse.wst.jsdt.core.jsNature"/>
+		     </adapt>
+         </enabledWhen>
+      </page>
+   </extension>
+  <extension
+        point="org.eclipse.ui.preferencePages">
+         <page
+       		name="Closure Compiler"
+            category="org.eclipse.wst.jsdt.ui.preferences.JavaBasePreferencePage"
+            class="in.co.saionline.closureeclipse.ui.ClosurePreferencePage"
+            id="in.co.saionline.ClosureEclipse.ui.ClosurePreferencePage"
+           >
+      </page>
+  </extension>
+  <extension
+        point="org.eclipse.core.runtime.preferences">
+        <initializer class="in.co.saionline.closureeclipse.PreferenceInitializer"/>
+  </extension>
+
+</plugin>
