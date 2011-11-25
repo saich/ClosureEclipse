@@ -19,6 +19,7 @@ A few known Issues
 * Supports only Eclipse Indigo (3.7) or later.
 * Project-level settings are saved for the workspace, not at project-level.
 * You can't choose the version of Closure Compiler you want to use.
+* Specifying the externs files is not supported yet.
 
 ---------------------------------------
 Got a feature request? Or found a bug? Go ahead and log an issue [here](https://github.com/saich/ClosureEclipse/issues)
