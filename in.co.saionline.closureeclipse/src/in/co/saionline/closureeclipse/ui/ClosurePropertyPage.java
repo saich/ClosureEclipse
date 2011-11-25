@@ -19,6 +19,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbenchPropertyPage;
 import org.eclipse.ui.dialogs.PropertyPage;
 
+import com.google.javascript.jscomp.CheckLevel;
 import com.google.javascript.jscomp.CompilationLevel;
 import com.google.javascript.jscomp.WarningLevel;
 
@@ -36,6 +37,10 @@ public class ClosurePropertyPage extends PropertyPage implements IWorkbenchPrope
 	Button mWarnDefault;
 	Button mWarnQuiet;
 	Button mWarnVerbose;
+	
+	Button mUnknownOff;
+	Button mUnknownWarn;
+	Button mUnknownError;
 	
 	// TODO: Add "Report Unknown Types"
 
@@ -111,6 +116,23 @@ public class ClosurePropertyPage extends PropertyPage implements IWorkbenchPrope
 		mWarnDefault.setText("Default");
 		mWarnQuiet.setText("Quiet");
 		mWarnVerbose.setText("Verbose");
+		
+		// Report Unknown Types
+		Composite unknownTypesComposite = new Composite(group, SWT.NONE);
+		unknownTypesComposite.setLayout(new GridLayout(3, false));
+		unknownTypesComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 3, 1));
+		
+		Label unknownTypesLabel = new Label(unknownTypesComposite, SWT.NONE);
+		unknownTypesLabel.setText("Report Unknown Types: ");
+		unknownTypesLabel.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 3, 1));
+		
+		mUnknownOff = new Button(unknownTypesComposite, SWT.RADIO);
+		mUnknownWarn = new Button(unknownTypesComposite, SWT.RADIO);
+		mUnknownError = new Button(unknownTypesComposite, SWT.RADIO);
+		
+		mUnknownOff.setText("Off");
+		mUnknownWarn.setText("Warning");
+		mUnknownError.setText("Error");
 	}
 
 	private void addOutputGroup(Composite parent) {
@@ -170,6 +192,17 @@ public class ClosurePropertyPage extends PropertyPage implements IWorkbenchPrope
 			warnLevel = WarningLevel.VERBOSE;
 		
 		settings.warningLevel = warnLevel;
+		
+		// Report Unknown Types
+		CheckLevel reportLevel = CheckLevel.OFF;
+		if(mUnknownOff.getSelection())
+			reportLevel = CheckLevel.OFF;
+		else if(mUnknownWarn.getSelection())
+			reportLevel = CheckLevel.WARNING;
+		else if(mUnknownError.getSelection())
+			reportLevel = CheckLevel.ERROR;
+		
+		settings.reportUnknownTypes = reportLevel;
 
 		SettingsManager.setProjectSettings(project, settings);
 
@@ -219,6 +252,21 @@ public class ClosurePropertyPage extends PropertyPage implements IWorkbenchPrope
 					break;
 				default :
 					mWarnVerbose.setSelection(true);
+			}
+			
+			// Report Unknown Types
+			switch (settings.reportUnknownTypes) {
+				case OFF :
+					mUnknownOff.setSelection(true);
+					break;
+				case WARNING:
+					mUnknownWarn.setSelection(true);
+					break;
+				case ERROR:
+					mUnknownError.setSelection(true);
+					break;
+				default :
+					mUnknownOff.setSelection(true);
 			}
 		}
 	}
