@@ -82,7 +82,7 @@ public class ClosureBuilder extends IncrementalProjectBuilder {
 
 			for (IResource resource : resources) {
 				IFile file = (IFile) resource;
-				System.out.print(file.getRawLocation().makeAbsolute().toOSString());
+				// System.out.print(file.getRawLocation().makeAbsolute().toOSString());
 				JSSourceFile jsFile = JSSourceFile.fromFile(file.getRawLocation().makeAbsolute()
 						.toFile());
 				sources.add(jsFile);

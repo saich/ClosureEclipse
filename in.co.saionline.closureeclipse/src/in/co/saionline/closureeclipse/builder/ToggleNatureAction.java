@@ -5,8 +5,10 @@ import java.util.Iterator;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -34,7 +36,6 @@ public class ToggleNatureAction implements IObjectActionDelegate {
 					project = (IProject) ((IAdaptable) element).getAdapter(IProject.class);
 				}
 				if (project != null) {
-					// TODO: Remove all my markers from this project
 					try {
 						project.deleteMarkers(ClosureErrorManager.MARKER_TYPE, false,
 								IResource.DEPTH_INFINITE);
@@ -68,7 +69,6 @@ public class ToggleNatureAction implements IObjectActionDelegate {
 				if (project != null) {
 					try {
 						
-						// TODO: Hookup the startup and create an Object, else this dynamic label doesn't work properly
 						IProjectDescription description = project.getDescription();
 						String[] natures = description.getNatureIds();
 						for (int i = 0; i < natures.length; ++i) {
@@ -117,6 +117,9 @@ public class ToggleNatureAction implements IObjectActionDelegate {
 					System.arraycopy(natures, i + 1, newNatures, i, natures.length - i - 1);
 					description.setNatureIds(newNatures);
 					project.setDescription(description, null);
+					// Remove all my markers from this project
+					project.deleteMarkers(ClosureErrorManager.MARKER_TYPE, false,
+							IResource.DEPTH_INFINITE);
 					return;
 				}
 			}
@@ -127,7 +130,10 @@ public class ToggleNatureAction implements IObjectActionDelegate {
 			newNatures[natures.length] = ClosureNature.NATURE_ID;
 			description.setNatureIds(newNatures);
 			project.setDescription(description, null);
+			// Build the Project
+			project.build(IncrementalProjectBuilder.CLEAN_BUILD, new NullProgressMonitor());
 		} catch (CoreException e) {
+			// TODO: Handle the ".project file is read-only" exception
 		}
 	}
 

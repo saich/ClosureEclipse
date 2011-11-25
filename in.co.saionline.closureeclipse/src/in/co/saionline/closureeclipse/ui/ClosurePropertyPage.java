@@ -41,8 +41,6 @@ public class ClosurePropertyPage extends PropertyPage implements IWorkbenchPrope
 	Button mUnknownOff;
 	Button mUnknownWarn;
 	Button mUnknownError;
-	
-	// TODO: Add "Report Unknown Types"
 
 	/**
 	 * Constructor for SamplePropertyPage.
