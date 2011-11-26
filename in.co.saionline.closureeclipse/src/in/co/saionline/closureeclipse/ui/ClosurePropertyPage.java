@@ -41,6 +41,8 @@ public class ClosurePropertyPage extends PropertyPage implements IWorkbenchPrope
 	Button mUnknownOff;
 	Button mUnknownWarn;
 	Button mUnknownError;
+	
+	private static final boolean ENALBE_OUTPUT_GROUP = false;
 
 	/**
 	 * Constructor for SamplePropertyPage.
@@ -68,7 +70,7 @@ public class ClosurePropertyPage extends PropertyPage implements IWorkbenchPrope
 		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
 		addCompilerOptionsGroup(composite);
-		addOutputGroup(composite);
+		if(ENALBE_OUTPUT_GROUP) addOutputGroup(composite);
 
 		setCurrentValues();
 
@@ -167,8 +169,11 @@ public class ClosurePropertyPage extends PropertyPage implements IWorkbenchPrope
 		Project project = ((Project) getElement());
 
 		SettingsManager.Settings settings = new SettingsManager.Settings();
-		settings.outputPath = mOutputPath.getText();
-		settings.outputWrapper = mOutputWrapper.getText();
+		
+		if(ENALBE_OUTPUT_GROUP) {
+			settings.outputPath = mOutputPath.getText();
+			settings.outputWrapper = mOutputWrapper.getText();
+		}
 
 		CompilationLevel level = CompilationLevel.SIMPLE_OPTIMIZATIONS;
 		if (mRadioWhitespaceOpt.getSelection())
@@ -221,8 +226,12 @@ public class ClosurePropertyPage extends PropertyPage implements IWorkbenchPrope
 
 	private void setSettings(SettingsManager.Settings settings) {
 		if (settings != null) {
-			mOutputPath.setText(settings.outputPath);
-			mOutputWrapper.setText(settings.outputWrapper);
+			
+			if(ENALBE_OUTPUT_GROUP) {
+				mOutputPath.setText(settings.outputPath);
+				mOutputWrapper.setText(settings.outputWrapper);
+			}
+			
 			switch (settings.compilationLevel) {
 				case WHITESPACE_ONLY :
 					mRadioWhitespaceOpt.setSelection(true);

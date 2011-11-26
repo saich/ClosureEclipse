@@ -93,7 +93,7 @@
          </enabledWhen>
       </page>
    </extension>
-  <extension
+  <!--<extension
         point="org.eclipse.ui.preferencePages">
          <page
        		name="Closure Compiler"
@@ -104,14 +104,14 @@
       </page>
   </extension>
   
+   <extension
+        point="org.eclipse.core.runtime.preferences">
+        <initializer class="in.co.saionline.closureeclipse.PreferenceInitializer"/>
+  </extension>
+  -->
   <extension
         point="org.eclipse.ui.startup">
        <startup class="in.co.saionline.closureeclipse.Startup"></startup>
   </extension>
   
-  <extension
-        point="org.eclipse.core.runtime.preferences">
-        <initializer class="in.co.saionline.closureeclipse.PreferenceInitializer"/>
-  </extension>
-
 </plugin>
