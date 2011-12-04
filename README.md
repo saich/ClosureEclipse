@@ -7,7 +7,7 @@ The major idea is to integrate the features of Closure Compiler into the IDE its
 
 How to use?
 ------------
-1. Install the plugin by copying the JAR to the plugins folder of your Eclipse Installation Folder.
+1. Install the plugin (available in [downloads](https://github.com/saich/ClosureEclipse/downloads) section) by copying the JAR to the plugins folder of your Eclipse Installation Folder.
 2. Right-click on a Javascript project and click "Enable Closure Compiler Nature"
 3. To change the properties, look for "Closure Compiler" in "Javascript" subgroup in the Project Properties.
 4. The Problems View now include the warnings and errrors reported by the Closure Compiler also!
