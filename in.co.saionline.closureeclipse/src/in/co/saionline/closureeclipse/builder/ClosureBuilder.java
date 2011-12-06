@@ -1,6 +1,7 @@
 package in.co.saionline.closureeclipse.builder;
 
 import in.co.saionline.closureeclipse.SettingsManager;
+import in.co.saionline.closureeclipse.SettingsManager.Settings;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,16 +70,28 @@ public class ClosureBuilder extends IncrementalProjectBuilder {
 
 	private void runCompiler(IResource[] resources) {
 		try {
+			
+			// Project Settings
+			SettingsManager.Settings settings = SettingsManager.getProjectSettings(getProject());
+			
 			Compiler.setLoggingLevel(Level.SEVERE);
 
 			Compiler compiler = new Compiler(new ClosureErrorManager(getProject()));
-			CompilerOptions options = getOptions();
+			CompilerOptions options = getOptions(settings);
 
 			ArrayList<JSSourceFile> sources = new ArrayList<JSSourceFile>();
 
-			// For now, just use the default externs of the library...
-			JSSourceFile[] externs = CommandLineRunner.getDefaultExterns().toArray(
-					new JSSourceFile[]{});
+			// Initialize with default externs of the library...
+			List<JSSourceFile> externs = CommandLineRunner.getDefaultExterns();
+			
+			if(settings.externsList.length() > 0) {
+				String[] list = settings.externsList.split(";");
+				for(String file : list) {
+					System.out.println("EXTERN: " + file);
+					externs.add(JSSourceFile.fromFile(file));
+				}
+			}
+			
 
 			for (IResource resource : resources) {
 				IFile file = (IFile) resource;
@@ -92,11 +105,11 @@ public class ClosureBuilder extends IncrementalProjectBuilder {
 			getProject().deleteMarkers(ClosureErrorManager.MARKER_TYPE, false,
 					IResource.DEPTH_INFINITE);
 
-			Result result = compiler.compile(externs, sources.toArray(new JSSourceFile[]{}),
+			Result result = compiler.compile(externs.toArray(new JSSourceFile[]{}), sources.toArray(new JSSourceFile[]{}),
 					options);
 
 			if (result.success) {
-				System.out.println(compiler.toSource());
+				// System.out.println(compiler.toSource());
 				// TODO: Write to the output file (follow output_wrapper)
 			}
 
@@ -108,9 +121,8 @@ public class ClosureBuilder extends IncrementalProjectBuilder {
 		}
 	}
 
-	private CompilerOptions getOptions() {
+	private CompilerOptions getOptions(Settings settings) {
 		CompilerOptions options = new CompilerOptions();
-		SettingsManager.Settings settings = SettingsManager.getProjectSettings(getProject());
 
 		settings.compilationLevel.setOptionsForCompilationLevel(options); // --compilation_level
 		settings.warningLevel.setOptionsForWarningLevel(options); // --warning_level

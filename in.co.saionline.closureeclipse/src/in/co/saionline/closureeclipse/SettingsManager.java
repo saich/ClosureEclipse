@@ -17,16 +17,16 @@ public class SettingsManager {
 		public CompilationLevel compilationLevel;
 		public WarningLevel warningLevel;
 		public CheckLevel reportUnknownTypes;
+		public String externsList;
 	}
 
 	private static QualifiedName qOptLevel = new QualifiedName("optlevel", "optlevel");
-	private static QualifiedName qOutputWrapper = new QualifiedName("outputwrapper",
-			"outputwrapper");
+	private static QualifiedName qOutputWrapper = new QualifiedName("outputwrapper", "outputwrapper");
 	private static QualifiedName qOutputPath = new QualifiedName("outputpath", "outputpath");
 	private static QualifiedName qWarningLevel = new QualifiedName("warningLevel", "warningLevel");
-	private static QualifiedName qReportUnknownTypes = new QualifiedName("unknowntypes",
-			"unknowntypes");
+	private static QualifiedName qReportUnknownTypes = new QualifiedName("unknowntypes", "unknowntypes");
 	private static QualifiedName qExcludeFile = new QualifiedName("excludefile", "excludefile");
+	private static QualifiedName qExternsList = new QualifiedName("externsList", "externsList");
 
 	private static final String OPT_WHITESPACE = "whitespace";
 	private static final String OPT_SIMPLE = "simple";
@@ -47,6 +47,7 @@ public class SettingsManager {
 		settings.compilationLevel = CompilationLevel.SIMPLE_OPTIMIZATIONS;
 		settings.warningLevel = WarningLevel.VERBOSE;
 		settings.reportUnknownTypes = CheckLevel.OFF;
+		settings.externsList = "";
 		return settings;
 	}
 
@@ -163,12 +164,16 @@ public class SettingsManager {
 				settings.compilationLevel = convertStringToCompilationLevel(value);
 
 				// Warning Level
-				settings.warningLevel = convertStringToWarningLevel(project
-						.getPersistentProperty(qWarningLevel));
+				settings.warningLevel = convertStringToWarningLevel(project.getPersistentProperty(qWarningLevel));
 
 				// Report Unknown Types
 				settings.reportUnknownTypes = convertStringToCheckLevel(project
 						.getPersistentProperty(qReportUnknownTypes));
+
+				// Externs List
+				String externsList = project.getPersistentProperty(qExternsList);
+				if(externsList != null)
+					settings.externsList = externsList;
 
 			} catch (CoreException e) {
 			}
@@ -186,12 +191,10 @@ public class SettingsManager {
 		try {
 			project.setPersistentProperty(qOutputPath, settings.outputPath);
 			project.setPersistentProperty(qOutputWrapper, settings.outputWrapper);
-			project.setPersistentProperty(qOptLevel,
-					convertCompilationLevelToString(settings.compilationLevel));
-			project.setPersistentProperty(qWarningLevel,
-					convertWarningLevelToString((settings.warningLevel)));
-			project.setPersistentProperty(qReportUnknownTypes,
-					convertCheckLevelToString(settings.reportUnknownTypes));
+			project.setPersistentProperty(qOptLevel, convertCompilationLevelToString(settings.compilationLevel));
+			project.setPersistentProperty(qWarningLevel, convertWarningLevelToString((settings.warningLevel)));
+			project.setPersistentProperty(qReportUnknownTypes, convertCheckLevelToString(settings.reportUnknownTypes));
+			project.setPersistentProperty(qExternsList, settings.externsList);
 			bSuccess = true;
 		} catch (CoreException e) {
 		}

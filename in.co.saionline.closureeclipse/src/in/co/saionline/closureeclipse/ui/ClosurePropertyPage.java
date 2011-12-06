@@ -42,6 +42,8 @@ public class ClosurePropertyPage extends PropertyPage implements IWorkbenchPrope
 	Button mUnknownWarn;
 	Button mUnknownError;
 	
+	Text mExterns;
+	
 	private static final boolean ENALBE_OUTPUT_GROUP = false;
 
 	/**
@@ -133,6 +135,13 @@ public class ClosurePropertyPage extends PropertyPage implements IWorkbenchPrope
 		mUnknownOff.setText("Off");
 		mUnknownWarn.setText("Warning");
 		mUnknownError.setText("Error");
+		
+		// Label for externs file
+		Label externsLabel = new Label(group, SWT.NONE);
+		externsLabel.setText("Extern Files:");
+		mExterns = new Text(group, SWT.SINGLE | SWT.BORDER);
+		mExterns.setLayoutData(new GridData(GridData.FILL, GridData.CENTER, true, false));
+		mExterns.setToolTipText("List of externs files path (absolute) separated by semi-colon (;)");
 	}
 
 	private void addOutputGroup(Composite parent) {
@@ -206,6 +215,8 @@ public class ClosurePropertyPage extends PropertyPage implements IWorkbenchPrope
 			reportLevel = CheckLevel.ERROR;
 		
 		settings.reportUnknownTypes = reportLevel;
+		
+		settings.externsList = mExterns.getText();
 
 		SettingsManager.setProjectSettings(project, settings);
 
@@ -275,6 +286,9 @@ public class ClosurePropertyPage extends PropertyPage implements IWorkbenchPrope
 				default :
 					mUnknownOff.setSelection(true);
 			}
+			
+			// Externs List
+			mExterns.setText(settings.externsList);
 		}
 	}
 
