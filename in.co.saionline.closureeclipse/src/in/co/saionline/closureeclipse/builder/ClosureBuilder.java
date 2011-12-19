@@ -129,6 +129,9 @@ public class ClosureBuilder extends IncrementalProjectBuilder {
 		
 		// Report variables whose type is not declared, and unable to determine automatically
 		options.reportUnknownTypes = settings.reportUnknownTypes;
+		
+		// 'Manage Closure Dependencies' option - Required for Closure Library projects
+		options.setManageClosureDependencies(settings.manageClosureDependencies);
 		return options;
 	}
 

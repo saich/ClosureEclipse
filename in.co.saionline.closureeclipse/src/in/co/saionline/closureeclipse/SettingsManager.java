@@ -18,6 +18,7 @@ public class SettingsManager {
 		public WarningLevel warningLevel;
 		public CheckLevel reportUnknownTypes;
 		public String externsList;
+		public boolean manageClosureDependencies;
 	}
 
 	private static QualifiedName qOptLevel = new QualifiedName("optlevel", "optlevel");
@@ -27,6 +28,7 @@ public class SettingsManager {
 	private static QualifiedName qReportUnknownTypes = new QualifiedName("unknowntypes", "unknowntypes");
 	private static QualifiedName qExcludeFile = new QualifiedName("excludefile", "excludefile");
 	private static QualifiedName qExternsList = new QualifiedName("externsList", "externsList");
+	private static QualifiedName qManageDependencies = new QualifiedName("manageClosureDependencies", "manageClosureDependencies");
 
 	private static final String OPT_WHITESPACE = "whitespace";
 	private static final String OPT_SIMPLE = "simple";
@@ -48,6 +50,7 @@ public class SettingsManager {
 		settings.warningLevel = WarningLevel.VERBOSE;
 		settings.reportUnknownTypes = CheckLevel.OFF;
 		settings.externsList = "";
+		settings.manageClosureDependencies = true;
 		return settings;
 	}
 
@@ -174,6 +177,11 @@ public class SettingsManager {
 				String externsList = project.getPersistentProperty(qExternsList);
 				if(externsList != null)
 					settings.externsList = externsList;
+				
+				// Manage Closure Dependencies
+				String manageClosureDependencies = project.getPersistentProperty(qManageDependencies);
+				if(manageClosureDependencies != null)
+					settings.manageClosureDependencies = Boolean.parseBoolean(manageClosureDependencies);
 
 			} catch (CoreException e) {
 			}
@@ -195,6 +203,7 @@ public class SettingsManager {
 			project.setPersistentProperty(qWarningLevel, convertWarningLevelToString((settings.warningLevel)));
 			project.setPersistentProperty(qReportUnknownTypes, convertCheckLevelToString(settings.reportUnknownTypes));
 			project.setPersistentProperty(qExternsList, settings.externsList);
+			project.setPersistentProperty(qManageDependencies, String.valueOf(settings.manageClosureDependencies));
 			bSuccess = true;
 		} catch (CoreException e) {
 		}
